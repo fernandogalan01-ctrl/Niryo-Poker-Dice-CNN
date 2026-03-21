@@ -1,4 +1,4 @@
-import cv2
+import cv2  
 import numpy as np
 
 def detect_dice(image):
@@ -10,7 +10,7 @@ def detect_dice(image):
     edged = cv2.Canny(blurred, 50, 150)
     
     # 3. Localización por contornos 
-    contours, _ = cv2.find_all_contours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     dice_crops = []
     for cnt in contours:
