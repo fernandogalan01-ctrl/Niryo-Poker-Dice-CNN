@@ -1,37 +1,22 @@
-from pyniryo import NiryoRobot
-from src.model import NiryoPokerCNN
-from src.vision_utils import process_image_for_dice
-from src.poker_logic import evaluate_hand
-import torch
-import cv2
+import os
+import sys
 
-# Configuración
-robot_ip = "192.168.1.XX" # Cambia por la IP de tu Niryo
-model = NiryoPokerCNN()
-model.load_state_dict(torch.load("models/modelo_caras.pth"))
-model.eval()
+# Add the project root to the path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-classes = ['9', '10', 'A', 'J', 'K', 'Q']
+from train import train_model
+from evaluation import run_evaluation
 
-with NiryoRobot(robot_ip) as robot:
-    print("Capturando imagen...")
-    ret, frame = robot.get_img_compressed() # Captura desde el robot
+def main():
+    print("--- Niryo Poker Dice CNN Pipeline ---")
+    choice = input("Select mode: [1] Train, [2] Evaluate, [3] Exit: ")
     
-    if ret:
-        crops = process_image_for_dice(frame)
-        results = []
-        
-        for img in crops:
-            # Preparar para la CNN
-            img_t = torch.tensor(img).permute(2,0,1).float().unsqueeze(0) / 255.0
-            out = model(img_t)
-            _, pred = torch.max(out, 1)
-            results.append(classes[pred.item()])
-        
-        jugada = evaluate_hand(results)
-        print(f"Jugada detectada: {jugada}")
-        
-        # Ejemplo de movimiento según jugada
-        if jugada != "Nada":
-            robot.pick_from_pose(0.2, 0.0, 0.1, 0, 0, 0)
-            robot.place_from_pose(0.1, 0.2, 0.1, 0, 0, 0)
+    if choice == '1':
+        train_model()
+    elif choice == '2':
+        run_evaluation()
+    else:
+        print("Exiting...")
+
+if __name__ == "__main__":
+    main()

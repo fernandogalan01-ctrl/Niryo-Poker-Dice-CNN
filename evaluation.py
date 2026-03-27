@@ -1,6 +1,18 @@
+
 import os
 import sys
 
+# --- 1. PATH CONFIGURATION ---
+# Use a raw string (r"") to prevent Windows backslash errors (e.g., \U, \n)
+PROJECT_ROOT = r"C:\Users\ferga\Documents\Niryo-Poker-Dice-CNN"
+
+# Add the project root to sys.path so 'import src' works
+if PROJECT_ROOT not in sys.path:
+    sys.path.append(PROJECT_ROOT)
+
+# --- 2. IMPORTS ---
+import torch
+import numpy as np  
 # --- 1. PATH CONFIGURATION ---
 # Use a raw string (r"") to prevent Windows backslash errors (e.g., \U, \n)
 PROJECT_ROOT = r"C:\Users\ferga\Documents\Niryo-Poker-Dice-CNN"
